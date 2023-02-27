@@ -8,11 +8,27 @@
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
                 <page name="invoixo" string="E. Invoicing">
+                    <button type="object" name="action_invoixo_register" string="Register" groups="base.group_system" />
+                    <!-- <div class="oe_button_box" name="invoixo_button_box">
+                        <button type="object" class="oe_stat_button" icon="fa-book-o" name="action_invoixo_register" groups="base.group_system" >
+                            <div class="o_form_field o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="currency_id" invisible="1"/>
+                                    <field name="total_invoiced" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                                </span>
+                                <span class="o_stat_text">Register</span>
+                            </div>
+                        </button>
+                    </div> -->
+
                     <group name="invoixo_settings">
                         <field name="invoixo_url"/>
                         <field name="invoixo_signature"/>
                         <field name="invoixo_signature_password" password="1"/>
                         <field name="invoixo_password" password="1"/>
+                    </group>
+                    <group name="invoixo_status">
+
                     </group>
                 </page>
             </xpath>

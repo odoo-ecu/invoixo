@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="l10n_ec_edi_document_invoixo_form" model="ir.ui.view">
+        <field name="name">l10n_ec_edi_document_invoixo.form</field>
+        <field name="model">l10nec.edi.document</field>
+        <field name="inherit_id" ref="l10n_ec_edi.l10n_ec_edi_document_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="action_ride_download" type="object" string="RIDE"/>
+
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

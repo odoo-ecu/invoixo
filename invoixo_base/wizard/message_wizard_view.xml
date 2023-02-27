@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="0">
+
+        <record id="view_invoixo_message_form" model="ir.ui.view">
+            <field name="name">invoixo.message.wizard</field>
+            <field name="model">invoixo.message.wizard</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Message">
+                    <group>
+                        <field name="name"/>
+
+                    </group>
+                    <footer>
+                        <button special="cancel" string="OK" class="btn_primary" default_focus="1"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_invoixo_message" model="ir.actions.act_window">
+            <field name="name">Wizard</field>
+            <field name="res_model">invoixo.message.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>
