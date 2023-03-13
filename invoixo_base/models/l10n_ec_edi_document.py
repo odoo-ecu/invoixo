@@ -23,11 +23,15 @@ class L10nEcEdiDocument(models.Model):
             'Content-Type': 'application/json'
         }
 
-        requests.put(url, payload, headers=headers)
+        res = requests.post(url, payload, headers=headers)
+
+        _logger.info("Response {}".format(res))
 
     def action_check_document_status(self):
         """Check status of document in invoixo server"""
         self.ensure_one()
+        if not self.name:
+            return False
         url = self.company_id.invoixo_url + "/v1.0/edoc/" + self.name
         headers = {'Accept': 'application/json'}
         response = requests.get(url, headers=headers)
@@ -37,18 +41,26 @@ class L10nEcEdiDocument(models.Model):
         except json.decoder.JSONDecodeError as error:
             _logger.error("Error in decoding JSON: {}, Reponse was: {}".format(error, response.content))
             return False
-        status_msg = data.get("status", "N/A")
-        _logger.info("El status es: {}".format(status_msg))
+        msg = data.get("msg", "N/A")
+        status = data.get("status", 'undefined')
+        _logger.info("El mensaje es: {} para {}".format(msg, self.name))
 
-        if status_msg == 'DEVUELTA':
-            self.state = "cancelled"
+        # if status_msg == 'DEVUELTA':
+        #     self.state = "cancelled"
 
-        msg = ""
+        # msg = ""
 
-        msgs = data.get("msgs", [])
-        for m in msgs:
-            for k, v in m.items():
-                msg += f'{k}: {v}\n'
+        # msgs = data.get("msgs", [])
+        # for m in msgs:
+        #     for k, v in m.items():
+        #         msg += f'{k}: {v}\n'
+
+        if status == 'error':
+            self.state = 'error'
+        
+        if status == 'authorized':
+            self.state = 'authorized'
+            self.authorization_date = data.get("auth_date", "")
 
 
         self.message_post(body=msg)
