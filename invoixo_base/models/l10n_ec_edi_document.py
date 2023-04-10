@@ -1,6 +1,8 @@
 import base64, requests, json
 from odoo import _, api, fields, models, tools
 import logging
+from datetime import datetime
+from odoo.tools import pytz
 
 _logger = logging.getLogger(__name__)
 
@@ -25,7 +27,12 @@ class L10nEcEdiDocument(models.Model):
 
         res = requests.post(url, payload, headers=headers)
 
-        _logger.info("Response {}".format(res))
+        response = res.json()
+
+        if response["status"] == "success":
+            self.state = "sent"
+
+
 
     def action_check_document_status(self):
         """Check status of document in invoixo server"""
@@ -57,25 +64,27 @@ class L10nEcEdiDocument(models.Model):
 
         if status == 'error':
             self.state = 'error'
-        
+
         if status == 'authorized':
             self.state = 'authorized'
-            self.authorization_date = data.get("auth_date", "")
+            authorization_date = data.get("auth_date", "")
+
+            user = self.env['res.users'].browse([2])
+            tz = pytz.timezone(user.tz) or pytz.utc
+
+            _logger.info("Authorization date {}".format(authorization_date))
+            naive = datetime.strptime(authorization_date, "%Y-%m-%d %H:%M:%S")
+            local_dt = tz.localize(naive, is_dst=None)
+            auth_date = local_dt.astimezone(pytz.utc)
+            self.authorization_date = auth_date.strftime("%Y-%m-%d %H:%M:%S")
 
 
         self.message_post(body=msg)
 
 
-    def _cron_process_documents_status(self, job_count=20):
-        """Send to SRI all documents marked as to send"""
-        # Retrieve documents to send
-        docs = self.search([('state', '=', 'to_send')])
-        for doc in docs:
-            doc.action_check_document_status()
-
 
     def action_ride_download(self):
-        url = self.company_id.invoixo_url + "/v1.0/edoc/ride/factura/pdf/" + self.name
+        url = self.company_id.invoixo_url + "/v1.0/edoc/ride/pdf/" + self.name
         return {
             'type': 'ir.actions.act_url',
             'url': url,

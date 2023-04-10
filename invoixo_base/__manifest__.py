@@ -6,13 +6,12 @@
     'author': 'Marcelo Mora <marcelo.mora@accioma.com>',
     'website': 'https://accioma.com',
     'license': 'LGPL-3',
-    'category': 'Accounting',
+    'category': 'Localization',
     'depends': [
-        'l10n_ec_edi'
+        'l10n_ec_edi_base_accioma'
     ],
     'data': [
         'security/ir.model.access.csv',
-        'data/cron.xml',
         'views/res_company_views.xml',
         'views/l10n_ec_edi_document_views.xml',
         'wizard/message_wizard_view.xml',
