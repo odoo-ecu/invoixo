@@ -1,6 +1,6 @@
 {
     'name': 'Invoixo Base',
-    'version': '16.0.1.0.0',
+    'version': '16.0.1.0.1',
     'description': 'Invoixo Base',
     'summary': 'Base module for invoixo electronic invoicing service',
     'author': 'Marcelo Mora <marcelo.mora@accioma.com>',
@@ -8,7 +8,7 @@
     'license': 'LGPL-3',
     'category': 'Localization',
     'depends': [
-        'l10n_ec_edi_base_accioma'
+        'l10n_ec_edi_base_accioma', 'l10n_ec_edi'
     ],
     'data': [
         'security/ir.model.access.csv',
